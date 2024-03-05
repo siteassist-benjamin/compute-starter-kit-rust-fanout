@@ -31,7 +31,7 @@ fn handle_fanout_ws(mut req: Request, chan: &str) -> Response {
 }
 
 fn handle_fanout(req: &Request, chan: &str) -> Response {
-    let channel = req.get_header_str("Fanout").unwrap_or("test");
+    let channel = req.get_query_parameter("fanout").unwrap_or("test");
     match req.get_url().path() {
         "/stream/long-poll" => fanout_util::grip_response("text/plain", "response", chan),
         "/stream/plain" => fanout_util::grip_response("text/plain", "stream", chan),
