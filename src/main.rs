@@ -4,7 +4,7 @@ use fastly::{Error, Request, Response};
 
 mod fanout_util;
 
-fn handle_fanout_ws(mut req: &Request, chan: &str) -> Response {
+fn handle_fanout_ws(mut req: Request, chan: &str) -> Response {
     if req.get_header_str("Content-Type") != Some("application/websocket-events") {
         return Response::from_status(StatusCode::BAD_REQUEST)
             .with_body("Not a WebSocket-over-HTTP request.\n");
@@ -35,7 +35,7 @@ fn handle_fanout(req: &Request, chan: &str) -> Response {
         "/stream/long-poll" => fanout_util::grip_response("text/plain", "response", chan),
         "/stream/plain" => fanout_util::grip_response("text/plain", "stream", chan),
         "/stream/sse" => fanout_util::grip_response("text/event-stream", "stream", chan),
-        "/stream/websocket" => handle_fanout_ws(req, chan),
+//         "/stream/websocket" => handle_fanout_ws(req, chan),
         _ => Response::from_status(StatusCode::BAD_REQUEST).with_body("Invalid Fanout request\n"),
     }
 }
