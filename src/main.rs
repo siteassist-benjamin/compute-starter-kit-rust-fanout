@@ -4,7 +4,7 @@ use fastly::{Error, Request, Response};
 
 mod fanout_util;
 
-fn handle_fanout_ws(mut req: Request, chan: &str) -> Response {
+fn handle_fanout_ws(mut req: &Request, chan: &str) -> Response {
     if req.get_header_str("Content-Type") != Some("application/websocket-events") {
         return Response::from_status(StatusCode::BAD_REQUEST)
             .with_body("Not a WebSocket-over-HTTP request.\n");
