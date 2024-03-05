@@ -56,7 +56,7 @@ fn main() -> Result<(), Error> {
             handle_fanout(&req, "test").send_to_client()
         } else {
             // Not from fanout, hand it off to Fanout to manage
-            req.handoff_fanout("self")?
+            req.with_header("Access-Control-Allow-Origin","*").handoff_fanout("self")?
         });
     }
 
