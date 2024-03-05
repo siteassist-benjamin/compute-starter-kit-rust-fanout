@@ -30,7 +30,7 @@ fn handle_fanout_ws(mut req: Request, chan: &str) -> Response {
     resp
 }
 
-fn handle_fanout(req: Request, chan: &str) -> Response {
+fn handle_fanout(req: &Request, chan: &str) -> Response {
     match req.get_url().path() {
         "/stream/long-poll" => fanout_util::grip_response("text/plain", "response", chan),
         "/stream/plain" => fanout_util::grip_response("text/plain", "stream", chan),
@@ -52,7 +52,7 @@ fn main() -> Result<(), Error> {
     if req.get_path().starts_with("/stream/") {
         return Ok(if req.get_header_str("Grip-Sig").is_some() {
             // Request is from Fanout
-            handle_fanout(req, "test").send_to_client()
+            handle_fanout(&req, "test").send_to_client()
         } else {
             // Not from fanout, hand it off to Fanout to manage
             req.handoff_fanout("self")?
