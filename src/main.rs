@@ -31,10 +31,11 @@ fn handle_fanout_ws(mut req: Request, chan: &str) -> Response {
 }
 
 fn handle_fanout(req: &Request, chan: &str) -> Response {
+    let channel = req.get_header_str("Fanout").unwrap_or("test").as_str()
     match req.get_url().path() {
         "/stream/long-poll" => fanout_util::grip_response("text/plain", "response", chan),
         "/stream/plain" => fanout_util::grip_response("text/plain", "stream", chan),
-        "/stream/sse" => fanout_util::grip_response("text/event-stream", "stream", chan),
+        "/stream/sse" => fanout_util::grip_response("text/event-stream", "stream", channel),
 //         "/stream/websocket" => handle_fanout_ws(req, chan),
         _ => Response::from_status(StatusCode::BAD_REQUEST).with_body("Invalid Fanout request\n"),
     }
